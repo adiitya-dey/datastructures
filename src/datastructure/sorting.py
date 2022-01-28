@@ -1,3 +1,5 @@
+
+from statistics import mean
 import timeit, time
 import logging
 import pandas as pd
@@ -59,10 +61,10 @@ class Sorting:
                     stmt_to_run = 'BasicSort(newarray.copy(),sorttype)'
                     # Timeit function runs the sorting function 5 times, and repeat the operation 5 times. \
                     # Out of the 5 repeated timings calculated, minimum timing among them is chosen.
-                    minimum_time = min(timeit.repeat(stmt = stmt_to_run, repeat=5, number=5, 
+                    average_time = mean(timeit.repeat(stmt = stmt_to_run, repeat=5, number=5, 
                     globals={'BasicSort': globals().get('BasicSort'),'newarray':locals().get('newarray'),
                     'sorttype': locals().get('sorttype')}))
-                    __outputdict[sorttype] = minimum_time
+                    __outputdict[sorttype] = average_time
                 __outputlist.append(__outputdict.copy())
                 logging.debug("{} Output List: {}".format(__category, __outputlist))
 
@@ -90,26 +92,25 @@ class Sorting:
             logging.info("{} Dataframe is converted to CSV successfully and stored in {}.".format(__category, csvfilename))
 
             # Declare configurations for pyplot function.
-            mm = 1/25.4 # convert inches to millimeter
             params = {
-                'axes.labelsize': 5,
-                'axes.titlesize': 6,
-                'legend.fontsize': 6,
-                'xtick.labelsize': 6,
-                'ytick.labelsize': 6
+                'axes.labelsize': 10,
+                'axes.titlesize': 14,
+                'legend.fontsize': 10,
+                'xtick.labelsize': 10,
+                'ytick.labelsize': 10
 
             }
 
             plt.rcParams.update(params)
-            plt.figure(figsize=(100*mm,80*mm))
+            plt.figure(figsize=(8,6))
             plt.plot(dataframe, marker='o')
             plt.legend(dataframe.columns, loc=0)
             plt.xscale(LogScale(axis=1,base=2))
             plt.yscale(LogScale(axis=1, base=10))
-            plt.xlabel("Array Size")
-            plt.ylabel("Time (seconds)")
-
-            # plt.title("Sorting Algorithm Comparisions between {} Arrays".format(category))
+            plt.xlabel("Array Size -->")
+            plt.ylabel("Time (seconds) -->")
+            plt.grid()
+            plt.title("Comparisions between {} Arrays".format(__category))
 
             # Store plotted graph as png file in figures Directory.
             # Ex: figures\array_reverse_Oct-22-2021_2103.png
